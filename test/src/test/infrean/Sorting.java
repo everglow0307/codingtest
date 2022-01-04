@@ -16,6 +16,7 @@ public class Sorting
         
      Integer[] input = new Integer[] {3,2,3,1,2,4,5,5,6};
      int k = 4;
+     
      Arrays.stream(moveZeros(input)).forEach(e -> System.out.print(e + " "));
      System.out.println();
      
