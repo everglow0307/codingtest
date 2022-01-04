@@ -26,6 +26,7 @@ public class Sorting
      System.out.println();
      
      System.out.println("세번째 문제 답:"+meetingRoom(intervals));
+     System.out.println();
     }
     
     public static Integer[] moveZeros(Integer[] nums) {
