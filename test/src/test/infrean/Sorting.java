@@ -31,6 +31,9 @@ public class Sorting
      System.out.println("네번째 문제 답: "+meetingRoom2(intervals));
      System.out.println();
      Arrays.stream(mergeInterval(intervals)).forEach(e -> System.out.println(e[0]+","+e[1]));
+     
+     String[] logs = new String[] {"dig1 8 2 3 1", "let1 abc cat", "let2 good dog book", "dig1 2 5", "let3 abc zoo"};
+     Arrays.stream(logfilesSorting(logs)).forEach(e -> System.out.println(e));
     }
     
     public static Integer[] moveZeros(Integer[] nums) {
@@ -158,5 +161,78 @@ public class Sorting
         }
         res.add(new int[] {start, end});
         return res.toArray(new int[res.size()][]);
+    }
+    
+    public static String[] logfilesSorting(String[] logs) {
+        
+        // comparable의 compareTo는 자기자신 객체와 매개변수객체를 비교한다. 비교대상이 자기자신 , 매개변수 객체이고,
+        // comparator의 compare은 두가지의 매개변수객체를 비교함.. 따라서 매개변수 2개 필요!!
+        
+        // public int compareTo() {
+        // return A.compareTo(B);
+        // }
+        // 자바에서는 오름차순이 default임. 오름차순은 1 2 3 기본적으로 앞에가 뒤보다 작다 
+        // 기본적으로 앞에꺼-뒤에꺼 빼는 음수값이 default인 것!!
+        // 그래서 음수값이 나올때 교환을 하지 않고, 양수값이 나오면 교환을 해서 오름차순으로 만든다.
+        
+        
+        /**
+         * Collections.sort(intervals, (a,b) -> a.start- b.start);
+         * 
+         * Collections.sort(intervals, comp2);
+         * 
+         * Comparator<Interval> comp2 = new Comparator<Interval>() {
+         *  @Override
+         *  public int compare(Interval o1, Interval o2) {
+         *      if(o1.start > o2.start) {
+         *          return 1;
+         *      } else if (o1.start < o2.start) {
+         *          return -1;
+         *      } else {
+         *          return 0;
+         *      }
+         *  };
+         *  
+         *  Compareator comp = new Comparator<Interval>() {
+         *      public int compare(Interval a, Interval b) {
+         *        return a.start - b.start;
+         *      }
+         *  }
+         * }
+         * */
+        Arrays.sort(logs, (s1, s2) -> {
+            // 분리
+            // dig1 8 2 6 4 -> dig1    8 2 6 4
+            // let1 abc cat -> let1    abc cat
+            String[] split1 = s1.split("", 2);
+            String[] split2 = s2.split("", 2);
+            
+            
+            // dig1, let1식별자 뒤의 앞문자로 dig/let인지 판단
+            boolean isDigit1 = Character.isDigit(split1[1].charAt(0));
+            boolean isDigit2 = Character.isDigit(split2[1].charAt(0));
+            
+            
+            if(!isDigit1 && !isDigit2) {
+                //1.모두 문자
+                // 모두 문자일 때 문자내용이 같을 경우에는 앞의 식별자로 순서여부를 따진다.
+                int comp = split1[1].compareTo(split2[1]); 
+                if (comp == 0) return split1[0].compareTo(split2[0]);
+                else return comp;
+            } else if(isDigit1 && isDigit2) {
+                //2. 모두 숫자
+                return 0;
+            } else if(isDigit1 && !isDigit2) {
+                //3. 첫번째는 숫자, 두번째는 문자 
+                // 문자, 숫자 위치를 바꿔야 해서 양수값 반환
+                return 1;
+            } else {
+                //4. 첫번째는 문자, 두번째는 숫자
+                // 문자가 앞에오고 숫자가 뒤에오도록 유지해야 하므로 -1반환
+                return -1;
+            }
+        });
+        
+        return logs;
     }
 }
