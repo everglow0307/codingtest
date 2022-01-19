@@ -1,6 +1,8 @@
 package test.infrean;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TwoPointer
@@ -79,5 +81,42 @@ public class TwoPointer
             max= Math.max(max, r-l);
         }
         return max;
+    }
+    
+    public static List<Integer> findAllAnagramInAString(String input, String anagram) {
+        
+        /**
+         * 해당하는 알파벳이 있는지 여부를 판단하기 위해서 int[]에 char형태로 차를 구해서 해당 알파벳자릿값의 인덱스++해줌.
+         * 
+         * */
+        List<Integer> result = new ArrayList<>();
+        int[] ana = new int[26];
+        for(int i=0; i<anagram.length(); i++) {
+            ana[anagram.charAt(i)-'a']++;
+        }
+        
+        // left값이 i, right값이 j
+        // i+j는 전체 문자열길이가 되고,
+        // j는 아나그램 문자열 길이만큼 측정해서 
+        // 아나그램 문자배열값과 같은지 right값이 커질수록 비교함.
+        for(int i=0; i<input.length()-anagram.length()+1; i++) {
+            int[] inp = new int[26];
+            for(int j=0; j<anagram.length(); j++) {                   
+                inp[input.charAt(i+j) - 'a']++;
+            }
+            if(check(ana, inp)) {
+                result.add(i);
+            }
+        }
+        return result;
+    }
+    
+    private static boolean check(int[] ana, int[] inp) {
+        for(int i=0; i<ana.length; i++) {
+            if(ana[i]!=inp[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 }
